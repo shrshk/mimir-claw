@@ -1,0 +1,202 @@
+{
+  "agents": {
+    "defaults": {
+      "authInheritance": {
+        "agentId": "main"
+      },
+      "workspace": "__HOME__/.openclaw/workspace",
+      "systemAgent": {
+        "agentId": "home"
+      },
+      "heartbeat": {
+        "agentId": "home"
+      }
+    },
+    "ownership": "explicit",
+    "entries": {
+      "home": {
+        "name": "home",
+        "workspace": "__HOME__/.openclaw/workspace-home",
+        "agentDir": "__HOME__/.openclaw/agents/home/agent",
+        "identity": {
+          "name": "Personal"
+        },
+        "model": "amazon-bedrock/us.anthropic.claude-haiku-4-5-20251001-v1:0",
+        "tools": {
+          "agentToAgent": {
+            "send": []
+          }
+        }
+      }
+    }
+  },
+  "plugins": {
+    "entries": {
+      "anthropic": {
+        "config": {
+          "sessionCatalog": {
+            "enabled": false
+          }
+        }
+      },
+      "amazon-bedrock": {
+        "config": {
+          "discovery": {
+            "enabled": false,
+            "region": "us-east-2"
+          }
+        },
+        "enabled": true
+      },
+      "device-pair": {
+        "config": {
+          "publicUrl": "__PUBLIC_URL__"
+        }
+      }
+    }
+  },
+  "telemetry": {
+    "enabled": false
+  },
+  "gateway": {
+    "mode": "local",
+    "port": 18789,
+    "bind": "loopback",
+    "auth": {
+      "mode": "token"
+    },
+    "tailscale": {
+      "mode": "off"
+    },
+    "trustedProxies": [
+      "127.0.0.1"
+    ],
+    "controlUi": {
+      "allowedOrigins": [
+        "__PUBLIC_URL__"
+      ]
+    },
+    "nodes": {
+      "commands": {
+        "deny": [
+          "photos.latest",
+          "contacts.search",
+          "calendar.events",
+          "reminders.list",
+          "location.get",
+          "motion.activity",
+          "motion.pedometer",
+          "camera.list",
+          "camera.snap",
+          "camera.clip",
+          "screen.record",
+          "contacts.add",
+          "calendar.add",
+          "reminders.add",
+          "health.summary",
+          "sms.send",
+          "sms.search"
+        ]
+      }
+    }
+  },
+  "tools": {
+    "profile": "full",
+    "sessions": {
+      "visibility": "agent"
+    },
+    "agentToAgent": {
+      "enabled": true,
+      "allow": [
+        "home"
+      ]
+    }
+  },
+  "hooks": {
+    "internal": {
+      "entries": {
+        "session-memory": {
+          "enabled": true
+        }
+      }
+    }
+  },
+  "env": {
+    "vars": {
+      "AWS_PROFILE": "openclaw-air",
+      "AWS_REGION": "us-east-2"
+    }
+  },
+  "talk": {
+    "agentId": "home"
+  },
+  "models": {
+    "providers": {
+      "amazon-bedrock": {
+        "baseUrl": "https://bedrock-runtime.us-east-2.amazonaws.com",
+        "api": "bedrock-converse-stream",
+        "auth": "aws-sdk",
+        "models": [
+          {
+            "id": "us.anthropic.claude-haiku-4-5-20251001-v1:0",
+            "name": "Claude Haiku 4.5 (Bedrock)",
+            "reasoning": true,
+            "input": [
+              "text",
+              "image"
+            ],
+            "contextWindow": 200000,
+            "maxTokens": 8192
+          },
+          {
+            "id": "us.anthropic.claude-sonnet-4-6",
+            "name": "Claude Sonnet 4.6 (Bedrock)",
+            "reasoning": true,
+            "input": [
+              "text",
+              "image"
+            ],
+            "contextWindow": 200000,
+            "maxTokens": 8192
+          },
+          {
+            "id": "us.anthropic.claude-opus-4-6-v1",
+            "name": "Claude Opus 4.6 (Bedrock)",
+            "reasoning": true,
+            "input": [
+              "text",
+              "image"
+            ],
+            "contextWindow": 200000,
+            "maxTokens": 8192
+          }
+        ]
+      }
+    }
+  },
+  "mcp": {
+    "servers": {
+      "mimir-flix": {
+        "url": "http://127.0.0.1:8723/mcp",
+        "transport": "streamable-http",
+        "headers": {
+          "Authorization": "Bearer ${MIMIR_FLIX_MCP_TOKEN}"
+        }
+      },
+      "mimir-photos": {
+        "url": "http://127.0.0.1:8721/mcp",
+        "transport": "streamable-http",
+        "headers": {
+          "Authorization": "Bearer ${MIMIR_PHOTOS_MCP_TOKEN}"
+        }
+      },
+      "mimir-climate": {
+        "url": "http://127.0.0.1:8725/mcp",
+        "transport": "streamable-http",
+        "headers": {
+          "Authorization": "Bearer ${MIMIR_CLIMATE_MCP_TOKEN}"
+        }
+      }
+    }
+  }
+}

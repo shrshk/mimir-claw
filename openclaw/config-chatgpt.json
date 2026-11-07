@@ -1,0 +1,62 @@
+{
+  "agents": {
+    "defaults": {
+      "systemAgent": {
+        "agentId": "mimir-clawgpt"
+      },
+      "heartbeat": {
+        "agentId": "mimir-clawgpt"
+      }
+    },
+    "entries": {
+      "mimir-clawgpt": {
+        "name": "mimir clawGPT",
+        "workspace": "__HOME__/.openclaw/workspace",
+        "agentDir": "__HOME__/.openclaw/agents/mimir-clawgpt/agent",
+        "identity": {
+          "name": "mimir clawGPT"
+        },
+        "tools": {
+          "deny": [
+            "mimir-flix__*",
+            "mimir-photos__*",
+            "mimir-climate__*",
+            "nodes"
+          ],
+          "agentToAgent": {
+            "send": []
+          }
+        }
+      }
+    }
+  },
+  "plugins": {
+    "entries": {
+      "codex": {
+        "config": {
+          "sessionCatalog": {
+            "enabled": false
+          }
+        },
+        "enabled": true
+      },
+      "openai": {
+        "enabled": true
+      }
+    }
+  },
+  "tools": {
+    "web": {
+      "search": {
+        "provider": "codex",
+        "enabled": true
+      }
+    },
+    "agentToAgent": {
+      "allow": [
+        "home",
+        "mimir-clawgpt"
+      ]
+    }
+  }
+}

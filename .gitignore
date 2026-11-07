@@ -1,0 +1,6 @@
+USER.md
+MEMORY.md
+memory/
+*.bak
+.DS_Store
+local.json
