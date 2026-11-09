@@ -6,7 +6,7 @@
 # First it checks what the Mac needs (scripts/prereqs.sh): it installs Node, OpenClaw and Tailscale when missing
 # (asking first, or --yes), and says what only the person can do: Homebrew's installer, OpenClaw's setup (`openclaw
 # onboard`: the gateway, its token, which goes in 1Password), Bedrock (scripts/bedrock-aws.sh: the AWS user and its
-# keys as profile openclaw-air, tested with one tiny call). Start mimir-flix, mimir-photos and mimir-climate once (each makes its MCP token file), and for --chatgpt sign in to
+# keys as profile openclaw-air, tested with one tiny call). Start mimir-flix, mimir-photos, mimir-climate and Highchair Chef once (each makes its MCP token file), and for --chatgpt sign in to
 # ChatGPT (Codex) during onboarding.
 # Then:
 #   1. the MCP tokens, read from each app's own file (never printed, never in git);
@@ -55,6 +55,7 @@ set_token() {  # <env var> <file>
 set_token MIMIR_FLIX_MCP_TOKEN "$HOME/.config/mimir-flix/mcp-token"
 set_token MIMIR_PHOTOS_MCP_TOKEN "$HOME/Library/Application Support/mimir-photos/mcp-token"
 set_token MIMIR_CLIMATE_MCP_TOKEN "$HOME/.config/mimir-climate/mcp-token"
+set_token HIGHCHAIR_CHEF_MCP_TOKEN "$HOME/.config/recipes/mcp-token"
 # 2. config (it refers to the tokens above)
 # one patch (each patch restarts the gateway): the base, plus the ChatGPT agent's part when it is wanted
 PUBLIC_URL=$PUBLIC_URL python3 - "$REPO/openclaw/config.json" ${CHATGPT:+"$REPO/openclaw/config-chatgpt.json"} <<'PY' \
@@ -98,7 +99,7 @@ path.write_text(text)
 PY
 echo "AGENTS.md: TV instructions in $WS_HOME"
 [ -z "$CHATGPT" ] || bash "$REPO/scripts/install-skills.sh" "$WS" movie-reviews
-bash "$REPO/scripts/install-skills.sh" "$WS_HOME" mimir-flix-recommendations mimir-climate
+bash "$REPO/scripts/install-skills.sh" "$WS_HOME" mimir-flix-recommendations mimir-climate highchair-chef
 
 # 4. automations (in TZ_NAME: local.json, else this Mac's time zone)
 # A config change restarts the gateway: wait for it, and stop rather than guess when the job list can't be read.

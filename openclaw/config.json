@@ -196,6 +196,13 @@
         "headers": {
           "Authorization": "Bearer ${MIMIR_CLIMATE_MCP_TOKEN}"
         }
+      },
+      "highchair-chef": {
+        "url": "http://127.0.0.1:8726/mcp",
+        "transport": "streamable-http",
+        "headers": {
+          "Authorization": "Bearer ${HIGHCHAIR_CHEF_MCP_TOKEN}"
+        }
       }
     }
   }

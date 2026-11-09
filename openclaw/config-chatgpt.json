@@ -21,6 +21,7 @@
             "mimir-flix__*",
             "mimir-photos__*",
             "mimir-climate__*",
+            "highchair-chef__*",
             "nodes"
           ],
           "agentToAgent": {

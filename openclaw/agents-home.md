@@ -21,6 +21,11 @@ For the home's heating and cooling (temperatures, what the thermostats are set t
 saving on the electric bill), use the `mimir-climate` skill and its `mimir-climate__*` tools. Change a setting only
 when the person asks for that change.
 
+## Cooking for the little one
+
+For toddler meals (ideas, recipes, swaps for allergies, saving a family version), use the `highchair-chef` skill and
+its `highchair-chef__*` tools. Always pass the child's allergens from USER.md as `avoid`.
+
 ## Photos
 
 For the home's photos (how many are in Immich, whether backups ran, what can be freed from iCloud), use the

@@ -18,6 +18,7 @@ person says so ("add 2 and 5 to my list").
 | [movie-reviews](skills/movie-reviews/SKILL.md) | ChatGPT agent (web search; every `mimir-flix__*` tool denied) | Asked each morning in its own `reviews` session, finds what people say about new titles (Reddit, X, Instagram, TikTok, critics) and replies with a short list | web search only |
 | [mimir-flix-recommendations](skills/mimir-flix-recommendations/SKILL.md) | Personal agent (Bedrock) | Reads the morning's reviews, ranks by the person's USER.md directives and the house's taste, posts the picks in its `mimir-picks` thread, adds the chosen ones to My list | `mimir-flix__*` |
 | [mimir-climate](skills/mimir-climate/SKILL.md) | Personal agent (Bedrock) | Reads the thermostats; changes a schedule period only when the person asks; suggests savings by the person's USER.md comfort directives | `mimir-climate__*` |
+| [highchair-chef](skills/highchair-chef/SKILL.md) | Personal agent (Bedrock) | Finds toddler recipes by the child's age and allergies in USER.md, adapts them, saves family versions that show in the app | `highchair-chef__*` |
 
 ## Bring up OpenClaw on a new Mac
 
@@ -34,9 +35,10 @@ person says so ("add 2 and 5 to my list").
    profile `openclaw-air` (never printed) and tests them. Safe to run again: working keys are kept; `--rotate`
    replaces them and puts the old ones back if the new ones fail. If the test says so, send Anthropic's one-time
    use-case form in the Bedrock console (Model catalog, a Claude model).
-2. Install and start mimir-flix, mimir-photos and [mimir-climate](https://github.com/shrshk/mimir-climate) once:
-   each makes the token OpenClaw uses for its MCP (`~/.config/mimir-flix/mcp-token`,
-   `~/Library/Application Support/mimir-photos/mcp-token`, `~/.config/mimir-climate/mcp-token`).
+2. Install and start mimir-flix, mimir-photos, [mimir-climate](https://github.com/shrshk/mimir-climate) and
+   [Highchair Chef](https://github.com/shrshk/recipes) once: each makes the token OpenClaw uses for its MCP
+   (`~/.config/mimir-flix/mcp-token`, `~/Library/Application Support/mimir-photos/mcp-token`,
+   `~/.config/mimir-climate/mcp-token`, `~/.config/recipes/mcp-token`).
 3. Clone this repo to `~/src/mimir-claw` (the 6:00 job runs from there) and run `bash scripts/bootstrap.sh`
    (`--dry-run` first validates the config only). It always sets up the Personal agent and its skills. Add
    `--chatgpt` for the ChatGPT agent (the public reviews researcher, its web search and the 6:00 reviews job,
@@ -57,10 +59,10 @@ filled in):
 
 - agents: `home` ("Personal", Bedrock Haiku; voice `talk.agentId` uses it) and, optional, `mimir-clawgpt` (ChatGPT);
 - privacy: `tools.sessions.visibility: "agent"` (the default lets every agent read every other agent's transcripts),
-  `agentToAgent.send: []` for both, the ChatGPT agent denies `mimir-flix__*`, `mimir-photos__*`, `mimir-climate__*` and `nodes`;
+  `agentToAgent.send: []` for both, the ChatGPT agent denies `mimir-flix__*`, `mimir-photos__*`, `mimir-climate__*`, `highchair-chef__*` and `nodes`;
 - the phone: `gateway.nodes.commands.deny` blocks photos, contacts, calendar, reminders, location, motion, camera,
   screen recording, SMS and health;
-- Bedrock models (Haiku, Sonnet, Opus), the mimir-flix, mimir-photos and mimir-climate MCP servers (photos: read-only status,
+- Bedrock models (Haiku, Sonnet, Opus), the mimir-flix, mimir-photos, mimir-climate and highchair-chef MCP servers (photos: read-only status,
   jobs and the iCloud safe date; no file names), the Caddy address for pairing, telemetry off.
 
 Not in git, on purpose: USER.md (the person's directives), MEMORY.md and memory/, sessions, paired devices, the
