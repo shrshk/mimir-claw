@@ -4,3 +4,5 @@ memory/
 *.bak
 .DS_Store
 local.json
+__pycache__/
+*.pyc
