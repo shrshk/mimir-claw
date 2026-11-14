@@ -98,8 +98,17 @@ class AskTest(unittest.TestCase):
         self.assertEqual(self.ask("Will it rain today?"), (200, "It's sunny, see the forecast."))
         path, auth, body = Fake.seen[-1]
         self.assertEqual((path, auth, body["model"], body["user"]), ("/v1/chat/completions", "Bearer gw-secret", "openclaw/home", "voice"))
-        self.assertEqual(body["messages"][-1], {"role": "user", "content": "Will it rain today?"})
+        self.assertTrue(body["messages"][-1]["content"].endswith("Will it rain today?"))
         self.assertIn("speech", body["messages"][0]["content"])
+
+    def test_a_long_listed_reply_is_read_as_its_first_sentences_without_dashes(self):
+        Fake.agent_reply = "You have new episodes:\n- Show A: 20 new.\n- Show B: all 8.\n" + "More detail here. " * 40
+        status, text = self.ask("anything new?")
+        self.assertEqual(status, 200)
+        self.assertTrue(text.startswith("You have new episodes: Show A: 20 new. Show B: all 8."))
+        self.assertLessEqual(len(text), mimir_ask.SPOKEN_MAX)
+        self.assertNotIn("- ", text)
+        Fake.agent_reply = "It's **sunny**, see [the forecast](https://example.com)."
 
     def test_a_failing_agent_says_sorry_instead_of_an_error(self):
         mimir_ask.GATEWAY = "http://127.0.0.1:9"  # nothing listens there

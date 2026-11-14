@@ -43,6 +43,7 @@ VOICE = (
     "If something needs a choice or a long answer, say so in a sentence and suggest asking in the OpenClaw app."
 )
 SORRY = "Sorry, I couldn't get an answer just now. Try again in a moment."
+SPOKEN_MAX = 400  # characters: about three sentences, 20 seconds of speech
 
 TV_QUESTION = re.compile(r"\bwhat(?:'?s| is)\s+(?:on|playing)(?:\s+on)?(?:\s+the)?\s+tv\b|\bwhat(?:'?s| is) playing\b", re.I)
 
@@ -106,17 +107,32 @@ FAST = [(TV_QUESTION, lambda: say_whats_on_tv(mcp_tool("whats_on_tv")))]
 
 
 def speakable(text: str) -> str:
-    """The agent's reply for speech: no markdown marks or links."""
+    """The agent's reply for speech: no markdown marks, links or list dashes, and whole sentences up to SPOKEN_MAX
+    (a list read aloud is too long for a Watch)."""
     text = re.sub(r"\[([^\]]+)\]\([^)]+\)", r"\1", text)
+    text = re.sub(r"^\s*(?:[-*•]|\d+[.)])\s+", "", text, flags=re.M)
     text = re.sub(r"[*_`#>]+", "", text)
-    return re.sub(r"\s+", " ", text).strip()
+    text = re.sub(r"\s+", " ", text).strip()
+    if len(text) <= SPOKEN_MAX:
+        return text
+    sentences = re.split(r"(?<=[.!?])\s+", text)
+    out = sentences[0]
+    for sentence in sentences[1:]:
+        if len(out) + 1 + len(sentence) > SPOKEN_MAX:
+            break
+        out += " " + sentence
+    return out if len(out) <= SPOKEN_MAX else out[: SPOKEN_MAX - 1].rsplit(" ", 1)[0] + "…"
 
 
 def ask_agent(question: str) -> str:
     body = {
         "model": AGENT,
         "user": SESSION,
-        "messages": [{"role": "system", "content": VOICE}, {"role": "user", "content": question}],
+        # The voice rule goes with the question too: the agent's own instructions weigh more than a system note.
+        "messages": [
+            {"role": "system", "content": VOICE},
+            {"role": "user", "content": f"(Spoken, answer in one or two short sentences.) {question}"},
+        ],
     }
     out = post_json(
         f"{GATEWAY}/v1/chat/completions", body, {"Authorization": f"Bearer {gateway_token()}"}, AGENT_WAIT
