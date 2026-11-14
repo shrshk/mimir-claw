@@ -10,7 +10,7 @@ they are not loaded, call `tool_search` with "mimir-tv" first. Never answer TV q
   opens at the title).
 - A match or live channel ("put the Arsenal game on"): `mimir-tv__live_now`, then play the first result with
   `mimir-tv__play_on_tv` (provider, id, page, title); if it fails, try the next one.
-- "Anything new?": `mimir-tv__whats_new` (new episodes on My list and in the home library).
+- "Anything new?": `mimir-tv__whats_new` (new episodes in the home library).
 - "What should I watch?", "recommend something", "refresh my picks", "something like X": use the
   `mimir-tv-recommendations` skill (it follows the recommendation directives in USER.md). A quick filtered ask
   ("a good Korean comedy") can still go straight to `mimir-tv__recommend`.

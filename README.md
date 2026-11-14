@@ -16,7 +16,7 @@ person says so ("add 2 and 5 to my list").
 | Skill | Agent | What it does | Tools |
 |---|---|---|---|
 | [movie-reviews](skills/movie-reviews/SKILL.md) | ChatGPT agent (web search; every `mimir-tv__*` tool denied) | Asked each morning in its own `reviews` session, finds what people say about new titles (Reddit, X, Instagram, TikTok, critics) and replies with a short list | web search only |
-| [mimir-tv-recommendations](skills/mimir-tv-recommendations/SKILL.md) | Personal agent (Bedrock) | Reads the morning's reviews, ranks by the person's USER.md directives and the house's taste, posts the picks in its `mimir-picks` thread, adds the chosen ones to My list | `mimir-tv__*` |
+| [mimir-tv-recommendations](skills/mimir-tv-recommendations/SKILL.md) | Personal agent (Bedrock) | Reads the morning's reviews, ranks by the person's USER.md directives and the house's taste, posts the picks in its `mimir-picks` thread, keeps the chosen ones on its own picks list (`picks/list.md`) | `mimir-tv__*` |
 | [mimir-climate](skills/mimir-climate/SKILL.md) | Personal agent (Bedrock) | Reads the thermostats; changes a schedule period only when the person asks; suggests savings by the person's USER.md comfort directives | `mimir-climate__*` |
 | [highchair-chef](skills/highchair-chef/SKILL.md) | Personal agent (Bedrock) | Finds toddler recipes by the child's age and allergies in USER.md, adapts them, saves family versions that show in the app | `highchair-chef__*` |
 
