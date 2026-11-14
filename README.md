@@ -20,6 +20,29 @@ person says so ("add 2 and 5 to my list").
 | [mimir-climate](skills/mimir-climate/SKILL.md) | Personal agent (Bedrock) | Reads the thermostats; changes a schedule period only when the person asks; suggests savings by the person's USER.md comfort directives | `mimir-climate__*` |
 | [highchair-chef](skills/highchair-chef/SKILL.md) | Personal agent (Bedrock) | Finds toddler recipes by the child's age and allergies in USER.md, adapts them, saves family versions that show in the app | `highchair-chef__*` |
 
+## Siri: "Hey Siri, Mimir Claw" (mimir-ask)
+
+Ask the Personal agent by voice on the iPhone or the Apple Watch, and hear the answer, without opening the OpenClaw
+app. [ask/mimir_ask.py](ask/mimir_ask.py) is a small service on the Mac running OpenClaw: a question in, a short
+spoken answer out. "What's on TV" answers straight from mimir-tv in under a second; anything else goes to the
+Personal agent (Gateway's OpenAI-style endpoint, `openclaw/config.json` turns it on) in one `voice` conversation, told
+to answer in a sentence or two. It listens on 127.0.0.1:8728 only; a front door such as Caddy serves it to your
+tailnet (`ask.home.<your domain>`). Its own token is in `~/.config/mimir-ask/token` (owner-only); the Gateway's token
+never leaves the Mac. Questions and answers are not logged.
+
+1. On the Mac running OpenClaw: `bash scripts/bootstrap.sh` (turns the endpoint on), then `bash ask/install.sh`.
+   Tests: `cd ask && python3 -m unittest test_mimir_ask.py`.
+2. Put its token on the iPhone without typing it: in Terminal on that Mac, `pbcopy < ~/.config/mimir-ask/token`
+   (Universal Clipboard pastes it on the iPhone).
+3. On the iPhone (Tailscale on), Shortcuts → new Shortcut named **Mimir Claw**:
+   - **Ask for Input**: Text, prompt "What do you want to know?"
+   - **Get Contents of URL**: `https://ask.home.<your domain>/ask`, Method **POST**, Header `Authorization` =
+     `Bearer <paste the token>`, Request Body **JSON** with one Text field `q` = *Provided Input*.
+   - **Show Result**: *Contents of URL* (Siri speaks it, and it shows on the screen).
+   - Its settings (ⓘ): **Show on Apple Watch** on.
+4. "Hey Siri, Mimir Claw" → "What do you want to know?" → ask. Siri can't take the question in the same breath as a
+   Shortcut's name, so it is two steps. An answer from the agent takes 5 to 20 seconds.
+
 ## Bring up OpenClaw on a new Mac
 
 1. Run `bash scripts/prereqs.sh`: it checks what the Mac needs and installs Node, OpenClaw and Tailscale when
