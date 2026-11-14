@@ -176,11 +176,11 @@
   },
   "mcp": {
     "servers": {
-      "mimir-flix": {
+      "mimir-tv": {
         "url": "http://127.0.0.1:8723/mcp",
         "transport": "streamable-http",
         "headers": {
-          "Authorization": "Bearer ${MIMIR_FLIX_MCP_TOKEN}"
+          "Authorization": "Bearer ${MIMIR_TV_MCP_TOKEN}"
         }
       },
       "mimir-photos": {

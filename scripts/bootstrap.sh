@@ -6,7 +6,7 @@
 # First it checks what the Mac needs (scripts/prereqs.sh): it installs Node, OpenClaw and Tailscale when missing
 # (asking first, or --yes), and says what only the person can do: Homebrew's installer, OpenClaw's setup (`openclaw
 # onboard`: the gateway, its token, which goes in 1Password), Bedrock (scripts/bedrock-aws.sh: the AWS user and its
-# keys as profile openclaw-air, tested with one tiny call). Start mimir-flix, mimir-photos, mimir-climate and Highchair Chef once (each makes its MCP token file), and for --chatgpt sign in to
+# keys as profile openclaw-air, tested with one tiny call). Start mimir-tv, mimir-photos, mimir-climate and Highchair Chef once (each makes its MCP token file), and for --chatgpt sign in to
 # ChatGPT (Codex) during onboarding.
 # Then:
 #   1. the MCP tokens, read from each app's own file (never printed, never in git);
@@ -52,7 +52,7 @@ set_token() {  # <env var> <file>
     echo "mcp token $1: $2 missing; start the app once, then run this again" >&2
   fi
 }
-set_token MIMIR_FLIX_MCP_TOKEN "$HOME/.config/mimir-flix/mcp-token"
+set_token MIMIR_TV_MCP_TOKEN "$HOME/.config/mimir-tv/mcp-token"
 set_token MIMIR_PHOTOS_MCP_TOKEN "$HOME/Library/Application Support/mimir-photos/mcp-token"
 set_token MIMIR_CLIMATE_MCP_TOKEN "$HOME/.config/mimir-climate/mcp-token"
 set_token HIGHCHAIR_CHEF_MCP_TOKEN "$HOME/.config/recipes/mcp-token"
@@ -99,7 +99,7 @@ path.write_text(text)
 PY
 echo "AGENTS.md: TV instructions in $WS_HOME"
 [ -z "$CHATGPT" ] || bash "$REPO/scripts/install-skills.sh" "$WS" movie-reviews
-bash "$REPO/scripts/install-skills.sh" "$WS_HOME" mimir-flix-recommendations mimir-climate highchair-chef
+bash "$REPO/scripts/install-skills.sh" "$WS_HOME" mimir-tv-recommendations mimir-climate highchair-chef
 
 # 4. automations (in TZ_NAME: local.json, else this Mac's time zone)
 # A config change restarts the gateway: wait for it, and stop rather than guess when the job list can't be read.
@@ -117,13 +117,16 @@ elif have mimir-reviews; then echo "automation mimir-reviews: there"; else
     --command "bash $HOME/src/mimir-claw/scripts/gather-reviews.sh" --timeout-seconds 1500 >/dev/null
   echo "automation mimir-reviews: added"
 fi
-if have mimir-flix-picks; then echo "automation mimir-flix-picks: there"; else
-  openclaw cron add --name mimir-flix-picks --display-name "Morning picks" --declaration-key mimir-flix-picks \
+# Renamed (mimir-flix to mimir-tv, 2026-11): the old morning-picks automation goes; the new one is added below.
+old=$(openclaw cron list --json 2>/dev/null | python3 -c 'import json,sys; print(" ".join(j["id"] for j in json.load(sys.stdin)["jobs"] if j.get("declarationKey") == "mimir-flix-picks"))' 2>/dev/null || true)
+for id in $old; do openclaw cron rm "$id" >/dev/null && echo "automation mimir-flix-picks: removed (now mimir-tv-picks)"; done
+if have mimir-tv-picks; then echo "automation mimir-tv-picks: there"; else
+  openclaw cron add --name mimir-tv-picks --display-name "Morning picks" --declaration-key mimir-tv-picks \
     --agent home --session session:mimir-picks --cron "30 6 * * *" --tz "$TZ_NAME" \
     --model amazon-bedrock/us.anthropic.claude-sonnet-4-6 --timeout-seconds 1200 --tools '*' --no-deliver \
-    --description "Daily picks in the mimir-picks thread (mimir-flix-recommendations skill)" \
-    --message "Morning picks with the mimir-flix-recommendations skill. Post them in this thread: the person reads it later." >/dev/null
-  echo "automation mimir-flix-picks: added"
+    --description "Daily picks in the mimir-picks thread (mimir-tv-recommendations skill)" \
+    --message "Morning picks with the mimir-tv-recommendations skill. Post them in this thread: the person reads it later." >/dev/null
+  echo "automation mimir-tv-picks: added"
 fi
 if have home-board; then echo "automation home-board: there"; else
   openclaw cron add --name home-board --display-name "Home board" --declaration-key home-board \

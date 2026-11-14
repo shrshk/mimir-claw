@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Copies skills from this repo into an OpenClaw agent workspace (replacing older copies of the same skills).
 #   scripts/install-skills.sh <agent workspace> [skill …]     (no skills named: all of them)
-# On the Air: the Personal agent (~/.openclaw/workspace-home) gets mimir-flix-recommendations, mimir-climate and highchair-chef; the ChatGPT agent
+# On the Air: the Personal agent (~/.openclaw/workspace-home) gets mimir-tv-recommendations, mimir-climate and highchair-chef; the ChatGPT agent
 # (~/.openclaw/workspace) gets movie-reviews, the public researcher that sees nothing of the house.
 set -euo pipefail
 WS=${1:?usage: install-skills.sh <agent workspace> [skill …]}
